@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de descontos | Herbarium E-commerce</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 50px;
+    }
+
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #555;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #2e7d32;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2e7d32;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 30px;
+      background-color: #e8f5e9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .discount-group {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1><strong>Herbarium E-commerce</strong></h1>
+    <h2>Calculadora de descontos</h2>
+    <label for="preco">Preço cheio (R$):</label>
+    <input type="number" id="preco" placeholder="Digite o valor original do produto">
+
+    <div id="descontos-container">
+      <div class="discount-group">
+        <label>Desconto a ser aplicado (%):</label>
+        <input type="number" class="desconto" placeholder="Digite o percentual de desconto">
+      </div>
+    </div>
+
+    <button onclick="adicionarDesconto()">+ Adicionar mais descontos</button>
+
+    <label for="taxa">Taxa de marketplace (%):</label>
+    <input type="number" id="taxa" placeholder="Digite a taxa do marketplace">
+
+    <button onclick="calcularDesconto()">Calcular</button>
+
+    <div class="results" id="resultados" style="display: none;">
+      <p><strong>Valor do desconto da campanha (isolado):</strong> R$ <span id="valorDesconto"></span></p>
+      <p><strong>Preço do produto com desconto:</strong> R$ <span id="precoComDesconto"></span></p>
+      <p><strong>Valor da taxa do Marketplace:</strong> R$ <span id="valorTaxa"></span></p>
+      <p><strong>Lucro real:</strong> R$ <span id="lucroReal"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function adicionarDesconto() {
+      const container = document.getElementById('descontos-container');
+      const grupo = document.createElement('div');
+      grupo.classList.add('discount-group');
+      grupo.innerHTML = `
+        <label>Desconto a ser aplicado (%):</label>
+        <input type="number" class="desconto" placeholder="Digite o percentual de desconto">
+      `;
+      container.appendChild(grupo);
+    }
+
+    function calcularDesconto() {
+      const preco = parseFloat(document.getElementById('preco').value);
+      const taxa = parseFloat(document.getElementById('taxa').value);
+      const descontos = Array.from(document.getElementsByClassName('desconto')).map(d => parseFloat(d.value) || 0);
+
+      let precoComDesconto = preco;
+      descontos.forEach(d => {
+        precoComDesconto *= (1 - d / 100);
+      });
+
+      const valorDesconto = preco - precoComDesconto;
+      const valorTaxa = precoComDesconto * (taxa / 100);
+      const lucroReal = precoComDesconto - valorTaxa;
+
+      document.getElementById('valorDesconto').textContent = valorDesconto.toFixed(2);
+      document.getElementById('precoComDesconto').textContent = precoComDesconto.toFixed(2);
+      document.getElementById('valorTaxa').textContent = valorTaxa.toFixed(2);
+      document.getElementById('lucroReal').textContent = lucroReal.toFixed(2);
+
+      document.getElementById('resultados').style.display = 'block';
+    }
+  </script>
+</body>
+
+</html>
